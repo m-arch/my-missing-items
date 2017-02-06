@@ -4,10 +4,18 @@ var db          = require('../db');
 //Home
 router.route('/')
     .get(getHomeHandler)
-    .post(postHomeHandler)
+
+router.route('/appdata')
+    .get(getAppData)
+    .post(postAppData)
 
 
 function getHomeHandler(req, res){
+    res.render('home', {});
+}
+
+function getAppData(req, res){
+    res.setHeader('Content-Type', 'application/json');
     var templateVariables = {inventory: [], suppliers: [], error: null}
     var inventory = db.getInventory(function(err, inventoryDocs){
 	if(err) templateVariables.error = err;
@@ -15,13 +23,15 @@ function getHomeHandler(req, res){
 	var suppliers = db.getSuppliers(function(err, inventorySuppliers){
 	    if(err) templateVariables.error = err;
 	    else templateVariables.suppliers = inventorySuppliers;
-	    res.render('home', templateVariables);
+	    res.json({success: true, data: templateVariables});
 	});
     });
 }
 
 
-function postHomeHandler(req, res){
+function postAppData(req, res){
+    console.log("posted");
+    console.log(JSON.stringify(req.body));
     res.send({ success: true, redirect: 0})
 }
 

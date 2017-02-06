@@ -10185,3 +10185,8 @@ html, body {
   left: 45%;
   top: 35%;
 }
+
+/* line 18, ../sass/_generic.scss */
+.hidden {
+  display: none;
+}
