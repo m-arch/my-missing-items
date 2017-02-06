@@ -1,0 +1,16 @@
+
+html, body{
+    margin: 0 !important;
+    height: 100%;
+    font-family: $text-font;
+    font-size: $font-size;
+    background: $very-light-gray;
+
+}
+
+
+.note{
+    position: absolute;
+    left: 45%;
+    top: 35%;
+}

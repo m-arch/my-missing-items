@@ -1,7 +1,6 @@
 var express     = require('express');
 var router      = express.Router();
-
-
+var db          = require('../db');
 //Home
 router.route('/')
     .get(getHomeHandler)
@@ -9,7 +8,16 @@ router.route('/')
 
 
 function getHomeHandler(req, res){
-    res.render('home', { });
+    var templateVariables = {inventory: [], suppliers: [], error: null}
+    var inventory = db.getInventory(function(err, inventoryDocs){
+	if(err) templateVariables.error = err;
+	else templateVariables.inventory = inventoryDocs;
+	var suppliers = db.getSuppliers(function(err, inventorySuppliers){
+	    if(err) templateVariables.error = err;
+	    else templateVariables.suppliers = inventorySuppliers;
+	    res.render('home', templateVariables);
+	});
+    });
 }
 
 

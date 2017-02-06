@@ -23,7 +23,6 @@ DB.connect(mode, function(err, id){
 	assert.equal(null, err);
     }else{
 	//initializing database
-	DB.initCollections()
 	//setup admin user
 	//Starting the application
 	app.listen(port, () => {

@@ -17,9 +17,6 @@ exports.connect = function(mode, done) {
     case process.env.DEV_ENV:
 	uri = process.env.DEV_DB_URL;
 	break;
-    case process.env.TEST_ENV:
-	uri = process.env.TEST_DB_URL;
-	break;
     default:
 	uri = process.env.PROD_DB_URL;
     }
@@ -32,20 +29,17 @@ exports.connect = function(mode, done) {
 	    console.log("connected correctly to server db");
 	    state.db = DB;
 	    state.mode = mode;
+	    initCollections();
 	    done();
 	}
     });
-}
-
-exports.getDB = function() {
-    return state.db
 }
  
 //-------------------------------------Creating collections------------//
 
 COLLECTIONS = ["suppliers", "inventory"]
 
-exports.initCollections = function(){
+var initCollections = function(){
     COLLECTIONS.forEach(function(coll){
 	state.db.createCollection(coll, function(err, collection){
 	    if(err) console.log(err)
@@ -53,3 +47,29 @@ exports.initCollections = function(){
 	});
     });
 }
+
+
+//------------------------------Database management operations----------------------------//
+
+exports.getInventory = function(done){
+    state.db.collection("inventory").find().toArray(function(err, docs){
+	if(err){
+	    console.log(err);
+	    return done(err);
+	}else{
+	    return done(null, docs);
+	}
+    });
+}
+
+exports.getSuppliers = function(done){
+    state.db.collection("suppliers").find().toArray(function(err, docs){
+	if(err){
+	    console.log(err);
+	    return done(err);
+	}else{
+	    return done(null, docs);
+	}
+    });
+}
+					 
