@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='csrf-token', content='ac6959062dbe64f91fe385c01b4f4369')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title #{title} - Tlobfit Admin
+    //link(rel='shortcut icon', href='/favicon.png')
+    link(rel='stylesheet', href='/css/main.css')
+    script(src='/js/vendor/jquery.min.js') 
+    script(src='/js/vendor/fastclick.js')
+    script(src='/js/vendor/react.min.js')
+    script(src='/js/vendor/react-dom.min.js')
+    script(src='/js/vendor/browser.min.js')
+    script(src='/js/vendor/foundation.min.js')
+    script(src='/js/vendor/react-jsonschema-form.js')
+    script(src="https://maps.googleapis.com/maps/api/js")
+  body
+    #loader
+      .middle-page 
+        .menu-logo
+    .redirect-error #{message}
+    .container
+      block main-content
+
+  // Google Analytics: change UA-XXXXX-X to be your site's ID

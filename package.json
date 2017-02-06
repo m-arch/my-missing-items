@@ -1,0 +1,32 @@
+{
+  "name": "my-missing-items",
+  "version": "0.0.1",
+  "description": "A simple inventory stock management for missing items. ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-arch/my-missing-items.git"
+  },
+  "keywords": [
+    "inventory",
+    "stock",
+    "missing",
+    "items"
+  ],
+  "author": "m-arch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m-arch/my-missing-items/issues"
+  },
+  "homepage": "https://github.com/m-arch/my-missing-items#readme",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.1",
+    "mongodb": "^2.2.22",
+    "pug": "^2.0.0-beta11"
+  }
+}
