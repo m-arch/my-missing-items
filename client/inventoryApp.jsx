@@ -1,16 +1,26 @@
 var React = require('react');
 var Store = require('./store.jsx');
-var FormInput = require('./form.jsx');
+var NewSupplierForm = require('./form.jsx').NewSupplierForm;
+var NewItemForm = require('./form.jsx').NewItemForm;
+var ErrorForm = require('./form.jsx').ErrorForm;
+var SupplierWeeklyReport = require('./report.jsx').SupplierWeeklyReport;
+
 
 function startApp() {
     return {
 	data: Store.getData(),
-    };
+	suppliers: [],
+	error: null,
+	supplierData: null,
+    }
 }
 
 function getPageView() {
     return {	
-	data: Store.saveData(),
+	data: Store.reloadData(),
+	suppliers: Store.getSuppliers(),
+	error: Store.getError(),
+	supplierData: Store.getWeeklySupplierData(),
     };
 }
 	
@@ -19,7 +29,7 @@ var InventoryApp = React.createClass({
     
     getInitialState: function() {
 	return startApp(); //will initalize pages and variables.
-    },
+    }, 
 
     componentDidMount: function() {
 	Store.addChangeListener(this._onChange);
@@ -28,15 +38,42 @@ var InventoryApp = React.createClass({
     componentWillUnmount: function(){	
 	Store.removeChangeListener(this._onChange);
     },
+    
+    _closeError: function(){
+	this.setState({error: null});
+    },
+
 
     render: function() {
 	return (
 	    <div>
-		<div className="row" >
+		<ErrorForm error={this.state.error}/>
+		<a onClick={this._closeError} className="close">{this.state.error ? "x" : null}</a>
+		<ul className="accordion" data-accordion>
+		    <li className="accordion-navigation">
+			<a>New Supplier</a>
+			<div id="newsupplier" className="content active row">
+			    <div className="small-12 columns">
+				<NewSupplierForm />
+			    </div>
+			</div>
+		    </li>
+		    <li className="accordion-navigation">
+			<a>Weekly</a>
+			<div id="weekly" className="content active row">
+			    <div className="small-12 columns">
+				<SupplierWeeklyReport supplierData={this.state.supplierData} suppliers={this.state.suppliers}/>
+			    </div>
+			</div>
+		    </li>
+		</ul>
+		<div className="main-row" >
 		    <div className="small-12 columns">
 			<div className="row">
-			    <ListDailyItems data={this.state.data} />  
-			    <FormInput />
+			    <ListDailyItems  data={this.state.data} />  
+			    <div className="space-row"/>
+			    <div className="space-row"/>
+			    <NewItemForm />
 			</div>
 		    </div>
 		</div>
@@ -52,23 +89,32 @@ var InventoryApp = React.createClass({
 var ListDailyItems = React.createClass({
     render: function() {
 	if(this.props.data && this.props.data.inventory){
-	    alert(JSON.stringify(this.props.data));
 	    var items = this.props.data.inventory.map(function(item){
 		return (
-		    <div key={item.code} className="row">
-			<div className="small-3 columns">{item.code}</div>
-			<div className="small-5 columns">{item.description}</div>
-			<div className="small-1 columns">{item.quantity}</div>
-			<div className="small-3 columns">{item.supplier}</div>
-		    </div>
+		    <tr key={item._id}>
+			<td>{item.code}</td>
+			<td>{item.description}</td>
+			<td>{item.quantity}</td>
+			<td>{item.supplier}</td>
+			<td>{new Date(item.savedOn).toLocaleString()}</td>
+		    </tr>
 		);
 	    }.bind(this));
 	    return(
-		<div className="row">
-		    <div className="small-12 columns">
+		<table>
+		    <thead>
+			<tr>
+			    <th width="250">Code</th>
+			    <th>Description</th>
+			    <th width="50">Qty</th>
+			    <th width="150">Supplier</th>
+			    <th width="100">Date</th>
+			</tr>
+		    </thead>
+		    <tbody>
 			{items}
-		    </div>
-		</div>
+		    </tbody>
+		</table>
 	    )
 	}else{
 	    return(

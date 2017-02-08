@@ -1,8 +1,37 @@
 var React = require('react');
 var Store = require('./store.jsx');
+var errors = require('../utils/errors.js');
 
 ///////////////////////////////////
-var FormInput = React.createClass({
+var ErrorForm = React.createClass({
+    getInitialState: function(){
+	return {
+	    error: this.props.error,
+	}
+    }, 
+    
+    _closeError: function(){
+	this.state.error = null;
+    },
+    
+    render: function(){
+	return(
+	    <div>
+		{
+		    this.props.error ?
+		    <div data-alert className="alert-box info radius">
+			{this.props.error}
+		    </div>		
+		    :
+		    null
+		}
+	    </div>
+	);
+    }
+});
+
+
+var NewItemForm = React.createClass({
     getInitialState: function(){
 	return {
 	    code: "",
@@ -10,13 +39,6 @@ var FormInput = React.createClass({
 	    quantity: "",
 	    supplier: ""
 	}
-    },  
-    componentDidMount: function() {
-	Store.addChangeListener(this._onChange);
-    },
-    
-    componentWillUnmount: function() {
-	//TlobfitStore.removeChangeListener(this._onChange);
     },  
     
     _onChange: function(event){ 
@@ -26,14 +48,21 @@ var FormInput = React.createClass({
     },
     
     _onKeyPress: function(nextName, event){
+	var _this = this;
 	if(event.key == 'Enter'){
 	    if(nextName == "code"){
-		Store.addItem(this.state);
-		for(var ref in this.refs){
-		    this.setState({[this.refs[ref].name]: ""});
-		}
+		Store.supplierExistsP(_this.state.supplier, function(yes){
+		    if(yes){
+			Store.addItem(_this.state);
+			for(var ref in _this.refs){
+			    _this.setState({[_this.refs[ref].name]: ""});
+			}
+		    }else{
+			Store.reportError(errors.supplierNotInList);
+		    }
+		});
 	    }
-	    this.refs[nextName].focus();
+	    _this.refs[nextName].focus();
 	}
     },
     
@@ -65,4 +94,128 @@ var FormInput = React.createClass({
     }
 });
 
-module.exports = FormInput;
+var NewSupplierForm = React.createClass({
+    getInitialState: function(){
+	return {
+	    name: "",
+	    email: "",
+	    whatsapp: "",
+	    fax: ""
+	}
+    },
+    
+    _onChange: function(event){ 
+	if(event){
+	    this.setState({[event.target.name]: event.target.value});
+	}
+    },
+    
+    _onKeyPress: function(nextName, event){
+	var _this = this;
+	if(event.key == 'Enter'){
+	    if(nextName == "name"){
+		Store.supplierExistsP(_this.state.name, function(yes){
+		    if(yes)
+			Store.reportError(errors.alreadyExists);
+		    else{
+			Store.addSupplier(_this.state);
+			for(var ref in _this.refs){
+			    _this.setState({[_this.refs[ref].name]: ""});
+			}
+		    }
+		});
+	    }
+	    this.refs[nextName].focus(); 
+	}
+    },
+    
+    _saveButton: function(){
+	var _this = this;
+	Store.supplierExistsP(_this.state, function(yes){
+	    if(yes)
+		Store.reportError(errors.alreadyExists);
+	    else{
+		Store.addSupplier(_this.state);
+		for(var ref in _this.refs){
+		    _this.setState({[_this.refs[ref].name]: ""});
+		}
+	    }
+	})
+    },
+    
+    render: function() {
+	return(
+	    <div>
+		<div className="row">
+		    <div className="small-12 columns">
+			<label className="input-label">Name
+			    <input type="text" value={this.state.name} placeholder="Name" ref="name" name="name" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("email", event)} />
+			</label>
+		    </div>
+		</div>
+		<div className="row">
+		    <div className="small-12 columns">
+			<label className="input-label">Email
+			    <input type="text" value={this.state.email} placeholder="Email" ref="email" name="email" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("whatsapp", event)} />
+			</label>
+		    </div>
+		</div>
+		<div className="row">
+		    <div className="small-12 columns">
+			<label className="input-label">Whatsapp
+			    <input type="text" value={this.state.whatsapp} placeholder="Whatsapp" ref="whatsapp" name="whatsapp" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("fax", event)} />
+			</label>
+		    </div>
+		</div>
+		<div className="row">
+		    <div className="small-12 columns">
+			<label className="input-label">Fax
+			    <input type="text" value={this.state.fax} placeholder="Fax" ref="fax" name="fax" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("name", event)} />
+			</label>
+		    </div>
+		</div>
+		<div className="row">
+		    <div className="small-4 columns" />
+		    <div className="small-4 columns">
+			<a onClick={this._saveButton}>Save</a>
+		    </div>
+		    <div className="small-4 columns" />
+		</div>
+	    </div>
+	)
+    }
+});
+
+var SelectSupplierInput = React.createClass({
+    getInitialState: function(){
+	return {
+	    selected: null,
+	}
+    },
+
+    _onSelect: function(event){
+	Store.setSupplierWeeklyData(event.target.value);
+    },
+    
+    render: function(){
+	var _this = this;
+	var options = this.props.options.map((option) =>{
+	    return(
+		<option key={option.value} onClick={_this._onSelect} value={option.value? option.value : option}>{(option.value && option.name) ? option.name : option.value? option.value : option}</option>
+	    );
+	});
+	return(
+	    <select onChange={this._onSelect}> 
+		{options}
+	    </select>
+	)
+    }
+});
+
+module.exports = {
+    NewItemForm: NewItemForm,
+    NewSupplierForm: NewSupplierForm,
+    ErrorForm: ErrorForm,
+    SelectSupplierInput: SelectSupplierInput
+}
+    

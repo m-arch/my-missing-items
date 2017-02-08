@@ -73,3 +73,20 @@ exports.getSuppliers = function(done){
     });
 }
 					 
+
+exports.save = function(data, collection){
+    if(data)
+	state.db.collection(collection).update({_id: data._id}, data, {upsert: true});
+}
+
+
+exports.getWeeklySupplierData = function(supplier, done){
+    state.db.collection("inventory").find({supplier: supplier}).toArray(function(err, docs){
+	if(err){
+	    console.log(err)
+	    return done(err);
+	}else{
+	    return done(null, docs);
+	}
+    });
+}

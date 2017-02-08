@@ -8,7 +8,6 @@ html, body{
 
 }
 
-
 .note{
     position: absolute;
     left: 45%;
@@ -19,3 +18,57 @@ html, body{
     display: none;
 }
 
+.accordion{
+    position: absolute;
+    width: 30vw;
+}
+
+.main-row{
+    position: absolute;
+    top: 5vw;
+    left: 37vw;
+}
+
+.space-row{
+    padding-bottom: 1rem;
+}
+
+.paper-bg{
+    .columns{
+	padding-left: 2rem;
+	padding-top: 19px;
+	font-size: 17px;
+    }
+}
+
+.uppercase{
+    text-transform: uppercase;
+}
+
+table{
+    width: 100%;
+}
+
+.alert-box.info {
+    left: 36vw;
+    width: 15vw;
+}
+
+.close{
+    position: absolute;
+    top: 0;
+    left: 50vw;
+    color: #4f4f4f;
+}
+
+.report-table{
+    min-height: 450px;
+    width: 100%;
+}
+
+.report-message{
+    left: 8vw;
+    position: relative;
+    top: 190px;
+    font-size: 17px;
+}

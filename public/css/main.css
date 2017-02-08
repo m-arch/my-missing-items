@@ -10179,14 +10179,85 @@ html, body {
   background: #f2f2f2;
 }
 
-/* line 12, ../sass/_generic.scss */
+/* line 11, ../sass/_generic.scss */
 .note {
   position: absolute;
   left: 45%;
   top: 35%;
 }
 
-/* line 18, ../sass/_generic.scss */
+/* line 17, ../sass/_generic.scss */
 .hidden {
   display: none;
+}
+
+/* line 21, ../sass/_generic.scss */
+.accordion {
+  position: absolute;
+  width: 30vw;
+}
+
+/* line 26, ../sass/_generic.scss */
+.main-row {
+  position: absolute;
+  top: 5vw;
+  left: 37vw;
+}
+
+/* line 32, ../sass/_generic.scss */
+.space-row {
+  padding-bottom: 1rem;
+}
+
+/* line 37, ../sass/_generic.scss */
+.paper-bg .columns {
+  padding-left: 2rem;
+  padding-top: 19px;
+  font-size: 17px;
+}
+
+/* line 44, ../sass/_generic.scss */
+.uppercase {
+  text-transform: uppercase;
+}
+
+/* line 48, ../sass/_generic.scss */
+table {
+  width: 100%;
+}
+
+/* line 52, ../sass/_generic.scss */
+.alert-box.info {
+  left: 36vw;
+  width: 15vw;
+}
+
+/* line 57, ../sass/_generic.scss */
+.close {
+  position: absolute;
+  top: 0;
+  left: 50vw;
+  color: #4f4f4f;
+}
+
+/* line 64, ../sass/_generic.scss */
+.report-table {
+  min-height: 450px;
+  width: 100%;
+}
+
+/* line 69, ../sass/_generic.scss */
+.report-message {
+  left: 8vw;
+  position: relative;
+  top: 190px;
+  font-size: 17px;
+}
+
+/* line 1, ../sass/_icons.scss */
+.paper-bg {
+  background: url("../images/page.jpg") no-repeat;
+  position: relative;
+  width: 100%;
+  height: 45px;
 }
