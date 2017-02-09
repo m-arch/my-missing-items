@@ -12,6 +12,7 @@ function startApp() {
 	suppliers: [],
 	error: null,
 	supplierData: null,
+	page: 0,
     }
 }
 
@@ -21,6 +22,8 @@ function getPageView() {
 	suppliers: Store.getSuppliers(),
 	error: Store.getError(),
 	supplierData: Store.getWeeklySupplierData(),
+	leftArrow: false,
+	rightArrow: true,
     };
 }
 	
@@ -41,6 +44,26 @@ var InventoryApp = React.createClass({
     
     _closeError: function(){
 	this.setState({error: null});
+    },
+    
+    _setPage: function(downP){
+	if(downP){
+	    var page = this.state.page -1;
+	}else{
+	    var page = this.state.page +1;
+	}
+	console.log(page);
+	if(((page + 1) * 10) > this.state.data.inventory.length){
+	    this.state.rightArrow = false;
+	}else{
+	    this.state.rightArrow = true;
+	}
+	if(page -1 >= 0)
+	    this.setState({leftArrow: true});
+	else{
+	    this.setState({leftArrow: false});
+	}
+	this.setState({page: page});
     },
 
 
@@ -67,10 +90,21 @@ var InventoryApp = React.createClass({
 			</div>
 		    </li>
 		</ul>
+		<div className="filter-row">
+		    <div className="row">
+			<div className="small-12 columns">
+			    <dl className="sub-nav">
+				<dd><a onClick={this._setPage.bind(this, true)}> {this.state.leftArrow  ? "previous      ": ""}</a></dd>
+				<dd className="active">page{this.state.page}</dd>
+				<dd><a onClick={this._setPage.bind(this, false)}> {this.state.data && this.state.data.inventory.length > 10 && this.state.rightArrow ? "next": null}</a></dd>
+			    </dl>
+			</div>
+		    </div>
+		</div>
 		<div className="main-row" >
 		    <div className="small-12 columns">
 			<div className="row">
-			    <ListDailyItems  data={this.state.data} />  
+			    <ListDailyItems page={this.state.page} data={this.state.data}/>  
 			    <div className="space-row"/>
 			    <div className="space-row"/>
 			    <NewItemForm />
@@ -89,16 +123,21 @@ var InventoryApp = React.createClass({
 var ListDailyItems = React.createClass({
     render: function() {
 	if(this.props.data && this.props.data.inventory){
-	    var items = this.props.data.inventory.map(function(item){
-		return (
-		    <tr key={item._id}>
-			<td>{item.code}</td>
-			<td>{item.description}</td>
-			<td>{item.quantity}</td>
-			<td>{item.supplier}</td>
-			<td>{new Date(item.savedOn).toLocaleString()}</td>
-		    </tr>
-		);
+	    var counted = this.props.page * 10;
+	    var items = this.props.data.inventory.map(function(item, i){
+		if(i >= counted && i < counted + 10){
+		    return (
+			<tr key={item._id}>
+			    <td>{item.code}</td>
+			    <td>{item.description}</td>
+			    <td>{item.quantity}</td>
+			    <td>{item.supplier}</td>
+			    <td>{new Date(item.savedOn).toLocaleString()}</td>
+			</tr>
+		    );
+		}else{
+		    return null;
+		}
 	    }.bind(this));
 	    return(
 		<table>

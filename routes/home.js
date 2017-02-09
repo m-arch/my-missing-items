@@ -51,6 +51,14 @@ function getSupplierDataWeekly(req, res){
 	else    res.json({success: true, data: docs});
     });
 }
+
+function printSuppliersWeeklyData(req, res){
+    res.setHeader('Content-Type', 'application/json');
+    db.getWeeklySupplierData(supplier, (err, docs) =>{
+	if(err) res.json({success: false, error: errors.unableToLoadData});
+	else    res.json({success: true, data: docs});
+    });
+}
 	
     
 //------------------------------ END OF ROUTES ----------------
