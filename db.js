@@ -90,3 +90,21 @@ exports.getWeeklySupplierData = function(supplier, done){
 	}
     });
 }
+
+exports.updateInventory = function(id, field, value, collection){
+    var toSet = null;
+    switch(field){
+    case "code":
+	toSet = {code: value};
+	break;
+    case "description":
+	toSet = {description: value};
+	break;
+    case "quantity":
+	toSet = {quantity: value};
+	break;
+    default:
+	toSet = {supplier: value};
+    }
+    state.db.collection(collection).update({_id: id}, {$set: toSet});
+}

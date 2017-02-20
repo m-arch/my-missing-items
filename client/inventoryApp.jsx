@@ -10,6 +10,7 @@ function startApp() {
     return {
 	data: Store.getData(),
 	suppliers: [],
+	item: null,
 	error: null,
 	supplierData: null,
 	page: 0,
@@ -19,6 +20,7 @@ function startApp() {
 function getPageView() {
     return {	
 	data: Store.reloadData(),
+	item: Store.getItem(),
 	suppliers: Store.getSuppliers(),
 	error: Store.getError(),
 	supplierData: Store.getWeeklySupplierData(),
@@ -121,17 +123,22 @@ var InventoryApp = React.createClass({
 });
 
 var ListDailyItems = React.createClass({
+
+    _onClick: function(id, event){
+	Store.editItem(id, event.target);
+    },
+
     render: function() {
 	if(this.props.data && this.props.data.inventory){
 	    var counted = this.props.page * 10;
 	    var items = this.props.data.inventory.map(function(item, i){
 		if(i >= counted && i < counted + 10){
 		    return (
-			<tr key={item._id}>
-			    <td>{item.code}</td>
-			    <td>{item.description}</td>
-			    <td>{item.quantity}</td>
-			    <td>{item.supplier}</td>
+			<tr onClick={(event) => this._onClick(item._id, event)} key={item._id} id={item._id} onKeyPress={(event) => this._onKeyPress(event)}>
+			    <td name="code">{item.code}</td>
+			    <td name="description">{item.description}</td>
+			    <td name="quantity">{item.quantity}</td>
+			    <td name="supplier">{item.supplier}</td>
 			    <td>{new Date(item.savedOn).toLocaleString()}</td>
 			</tr>
 		    );

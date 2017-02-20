@@ -8,6 +8,7 @@ var descriptions = [];
 var suppliers = [];
 var _weeklySupplierData = []
 var _newData = {};
+var _item = {id: null, dom: null};
 
 
 function populateAutoCompleteArrays(data){
@@ -111,6 +112,37 @@ var Store = assign({}, EventEmitter.prototype, {
 	});
     },
 
+    saveEditedItem(){
+	if(_item.target.firstChild && _item.target.firstChild.tagName == "INPUT"){
+	    var name = _item.target.getAttribute("name");
+	    var value = _item.target.firstChild.value;
+	    var id = _item.id;
+	    var data = {name: name, value: value, id: id};
+	    $.ajax({
+		url: '/appdata/set/item',
+		dataType: 'json',
+		type: 'POST',
+		data: data,
+		success: function(response){
+		    if(response.success == true)
+			{
+			    console.log("Data saved");
+		    }
+		    else
+			{
+			    handleResponse(response.error.code, response.error.message);		    
+			}
+		},
+		
+		error: function(xhr, status, err){
+		    alert(err);
+		    console.error(status, err.toString());
+		}
+	    });	
+	    _item.target.innerHTML = value;
+	}
+    },
+    
     reloadData(){
 	if(_viewData.error)
 	    setTimeout(function(){
@@ -129,6 +161,10 @@ var Store = assign({}, EventEmitter.prototype, {
 
     getError() {
 	return _viewData.error;
+    },
+    
+    getItem(){
+	return _item;
     },
 
     addItem(data){
@@ -150,6 +186,22 @@ var Store = assign({}, EventEmitter.prototype, {
 	addToAutoCompleteArrays(data, true);
 	Store.setData();
 	Store.emitChange();
+    },
+
+    editItem(id, target){
+	if(id != _item.id || ! _item.target || target.tagName == "TD"){
+	    if(_item.id && _item.target) Store.saveEditedItem();
+	    _item.id = id;
+	    _item.target = target;
+	    var value = target.innerHTML;
+	    target.innerHTML = "<input type='text' value='" + value +  "'>";
+	    target.firstChild.addEventListener("keyup", function(event) {
+		event.preventDefault();
+		if (event.keyCode == 13) {//enter pressed
+		    Store.saveEditedItem();
+		}
+	    });
+	}
     },
 
     supplierExistsP(name, done){

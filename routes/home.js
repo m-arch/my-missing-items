@@ -16,6 +16,10 @@ router.route('/appdata/set')
 router.route('/supplierdata/get/weekly')
     .get(getSupplierDataWeekly)
 
+router.route('/appdata/set/item')
+    .post(setItemData)
+
+
 function getHomeHandler(req, res){
     res.render('home', {});
 }
@@ -58,6 +62,12 @@ function printSuppliersWeeklyData(req, res){
 	if(err) res.json({success: false, error: errors.unableToLoadData});
 	else    res.json({success: true, data: docs});
     });
+}
+
+function setItemData(req, res){
+    if(req.body.id)
+	db.updateInventory(req.body.id, req.body.name, req.body.value, "inventory");
+    res.send({ success: true, redirect: 0});
 }
 	
     
