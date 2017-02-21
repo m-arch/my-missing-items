@@ -195,7 +195,7 @@ var Store = assign({}, EventEmitter.prototype, {
 	data._id = uuidV4();
 	data.savedOn = new Date();
 	_newData = {inventory: data};
-	_viewData.inventory.push(data);
+	_viewData.inventory.unshift(data);
 	addToAutoCompleteArrays(data);
 	Store.setData();
 	Store.emitChange();
@@ -205,7 +205,7 @@ var Store = assign({}, EventEmitter.prototype, {
 	data._id = uuidV4();
 	data.savedOn = new Date();
 	_newData = {suppliers: data};
-	_viewData.suppliers.push(data);
+	_viewData.suppliers.unshift(data);
 	console.log(data);
 	addToAutoCompleteArrays(data, true);
 	Store.setData();
