@@ -19,6 +19,9 @@ router.route('/supplierdata/get/weekly')
 router.route('/appdata/set/item')
     .post(setItemData)
 
+router.route('/appdata/set/toggleitem')
+    .post(toggleItem)
+
 
 function getHomeHandler(req, res){
     res.render('home', {});
@@ -69,7 +72,12 @@ function setItemData(req, res){
 	db.updateInventory(req.body.id, req.body.name, req.body.value, "inventory");
     res.send({ success: true, redirect: 0});
 }
-	
+
+
+function toggleItem(req, res){
+    db.updateInventory(req.body.id, "foundP", req.body.status, "inventory");
+    res.send({success: true, redirect: 0});
+}
     
 //------------------------------ END OF ROUTES ----------------
 module.exports = router;

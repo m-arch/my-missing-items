@@ -57,7 +57,7 @@ exports.getInventory = function(done){
 	    console.log(err);
 	    return done(err);
 	}else{
-	    return done(null, docs);
+	    return done(null, docs.reverse());
 	}
     });
 }
@@ -102,6 +102,9 @@ exports.updateInventory = function(id, field, value, collection){
 	break;
     case "quantity":
 	toSet = {quantity: value};
+	break;
+    case "foundP":
+	toSet = {foundP: value};
 	break;
     default:
 	toSet = {supplier: value};

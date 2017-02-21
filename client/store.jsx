@@ -167,6 +167,30 @@ var Store = assign({}, EventEmitter.prototype, {
 	return _item;
     },
 
+    toggleItem(id, status){
+	$.ajax({
+	    url: '/appdata/set/toggleitem',
+	    dataType: 'json',
+	    type: 'POST',
+	    data: {id: id, status: status},
+	    success: function(response){
+		if(response.success == true)
+		    {
+			console.log("Data saved");
+		    }
+		else
+		    {
+			handleResponse(response.error.code, response.error.message);
+		    }
+	    },
+	    
+	    error: function(xhr, status, err){
+		alert(err);
+		console.error(status, err.toString());
+	    }
+	});	
+    },	
+    
     addItem(data){
 	data._id = uuidV4();
 	data.savedOn = new Date();

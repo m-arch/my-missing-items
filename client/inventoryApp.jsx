@@ -74,42 +74,37 @@ var InventoryApp = React.createClass({
 	    <div>
 		<ErrorForm error={this.state.error}/>
 		<a onClick={this._closeError} className="close">{this.state.error ? "x" : null}</a>
-		<ul className="accordion" data-accordion>
-		    <li className="accordion-navigation">
-			<a>New Supplier</a>
-			<div id="newsupplier" className="content active row">
-			    <div className="small-12 columns">
-				<NewSupplierForm />
-			    </div>
-			</div>
-		    </li>
-		    <li className="accordion-navigation">
-			<a>Weekly</a>
-			<div id="weekly" className="content active row">
-			    <div className="small-12 columns">
-				<SupplierWeeklyReport supplierData={this.state.supplierData} suppliers={this.state.suppliers}/>
-			    </div>
-			</div>
-		    </li>
-		</ul>
-		<div className="filter-row">
-		    <div className="row">
-			<div className="small-12 columns">
+		<div className="">
+		    <div className="space-row"/>
+		    <div className="small-12 medium-6 large-7 columns">
+			<div className="row">
 			    <dl className="sub-nav">
 				<dd><a onClick={this._setPage.bind(this, true)}> {this.state.leftArrow  ? "previous      ": ""}</a></dd>
 				<dd className="active">page{this.state.page}</dd>
 				<dd><a onClick={this._setPage.bind(this, false)}> {this.state.data && this.state.data.inventory.length > 10 && this.state.rightArrow ? "next": null}</a></dd>
 			    </dl>
 			</div>
-		    </div>
-		</div>
-		<div className="main-row" >
-		    <div className="small-12 columns">
 			<div className="row">
 			    <ListDailyItems page={this.state.page} data={this.state.data}/>  
 			    <div className="space-row"/>
 			    <div className="space-row"/>
 			    <NewItemForm />
+			</div>
+		    </div>
+		    <div className="small-0 medium-1 large-1 columns"></div>
+		    <div className="space-row"/>
+		    <div className="small-12 medium-5 large-4 columns">
+			<h3>New Supplier</h3>
+			<div id="newsupplier" className="content active row">
+			    <div className="small-12 columns">
+				<NewSupplierForm />
+			    </div>
+			</div>
+			<h3>Weekly</h3>
+			<div id="weekly" className="content active row">
+			    <div className="small-12 columns">
+				<SupplierWeeklyReport supplierData={this.state.supplierData} suppliers={this.state.suppliers}/>
+			    </div>
 			</div>
 		    </div>
 		</div>
@@ -128,6 +123,10 @@ var ListDailyItems = React.createClass({
 	Store.editItem(id, event.target);
     },
 
+    _toggleItem: function(id, status){
+	Store.toggleItem(id, status);
+    },
+
     render: function() {
 	if(this.props.data && this.props.data.inventory){
 	    var counted = this.props.page * 10;
@@ -139,7 +138,11 @@ var ListDailyItems = React.createClass({
 			    <td name="description">{item.description}</td>
 			    <td name="quantity">{item.quantity}</td>
 			    <td name="supplier">{item.supplier}</td>
-			    <td>{new Date(item.savedOn).toLocaleString()}</td>
+			    <td>{new Date(item.savedOn).toLocaleString()} {item.foundP}</td>
+			    {item.foundP && item.foundP == 'true' ? 
+			     <input type="checkbox" name="found" onClick={this._toggleItem.bind(this, item._id, false)}/> :
+			     <input type="checkbox" name="found" onClick={this._toggleItem.bind(this, item._id, true)} checked/>
+			    }
 			</tr>
 		    );
 		}else{

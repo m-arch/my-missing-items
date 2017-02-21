@@ -68,7 +68,7 @@ var NewItemForm = React.createClass({
     
     render: function() {
 	return(
-	    <div className="row">
+	    <div>
 		<div className="small-3 columns">
 		    <label className="input-label">Code
 			<input type="text" value={this.state.code} placeholder="Code" ref="code" name="code" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("description", event)} />
