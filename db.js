@@ -81,7 +81,7 @@ exports.save = function(data, collection){
 
 
 exports.getWeeklySupplierData = function(supplier, done){
-    state.db.collection("inventory").find({supplier: supplier}).toArray(function(err, docs){
+    state.db.collection("inventory").find({supplier: supplier, foundP: {$ne: "true"} }).toArray(function(err, docs){
 	if(err){
 	    console.log(err)
 	    return done(err);
