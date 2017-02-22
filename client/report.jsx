@@ -48,7 +48,7 @@ var SupplierReportLines = React.createClass({
 			<td>{item.code}</td>
 			<td>{item.description}</td>
 			<td>{item.quantity}</td>
-			<td>{item.savedOn}</td>
+			<td>{new Date(item.savedOn).toISOString().substring(0,10)}</td>
 		    </tr>
 		);
 	    });
