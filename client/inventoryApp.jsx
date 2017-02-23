@@ -138,7 +138,7 @@ var ListDailyItems = React.createClass({
 			    <td name="description">{item.description}</td>
 			    <td name="quantity">{item.quantity}</td>
 			    <td name="supplier">{item.supplier}</td>
-			    <td>{new Date(item.savedOn).toLocaleString()} {item.foundP}</td>
+			    <td>{new Date(item.savedOn).toLocaleString()}</td>
 			    {item.foundP && item.foundP == 'true' ? 
 			     <input type="checkbox" name="found" onClick={this._toggleItem.bind(this, item._id, false)} checked/> :
 			     <input type="checkbox" name="found" onClick={this._toggleItem.bind(this, item._id, true)} />
