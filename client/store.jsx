@@ -176,7 +176,7 @@ var Store = assign({}, EventEmitter.prototype, {
 	    success: function(response){
 		if(response.success == true)
 		    {
-			console.log("Data saved");
+			console.log("data saved");
 		    }
 		else
 		    {
@@ -215,16 +215,21 @@ var Store = assign({}, EventEmitter.prototype, {
     editItem(id, target){
 	if(id != _item.id || ! _item.target || target.tagName == "TD"){
 	    if(_item.id && _item.target) Store.saveEditedItem();
-	    _item.id = id;
-	    _item.target = target;
-	    var value = target.innerHTML;
-	    target.innerHTML = "<input type='text' value='" + value +  "'>";
-	    target.firstChild.addEventListener("keyup", function(event) {
-		event.preventDefault();
-		if (event.keyCode == 13) {//enter pressed
-		    Store.saveEditedItem();
-		}
-	    });
+	    else if (target.getAttribute("name") == "code" || 
+		     target.getAttribute("name") == "quantity" ||
+		     target.getAttribute("name") == "description" ||
+		     target.getAttribute("name") == "supplier"){
+		_item.id = id;
+		_item.target = target;
+		var value = target.innerHTML;
+		target.innerHTML = "<input type='text' value='" + value +  "'>";
+		target.firstChild.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode == 13) {//enter pressed
+			Store.saveEditedItem();
+		    }
+		});
+	    }
 	}
     },
 
