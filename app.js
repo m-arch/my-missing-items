@@ -5,9 +5,9 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 3000
-const pug = require('pug');
 const bodyParser = require('body-parser');
-
+var Q = require('q');
+const logic = require('./logic');
 // ------------------------------------------------------- END of third party package requirements ------------------------------------------------
 
 //environment varialbes
@@ -66,3 +66,16 @@ app.use((err, request, response, next) => {
     next();
 })
 
+
+// setTimeout(function(){
+//     Q.fcall(logic.createSuppliersInventoryFolder, ["MS", "MS", "MS"])
+// 	.then(function(path){
+// 	    return logic.makePhotosZip(path);
+// 	})
+// 	.then(function(){
+// 	    console.log("done");
+// 	})
+// 	.catch(function(err){
+// 	    console.log(err);
+// 	});
+// }, 1000);

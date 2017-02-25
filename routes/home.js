@@ -2,6 +2,9 @@ var express     = require('express');
 var router      = express.Router();
 var db          = require('../db');
 var errors      = require('../utils/errors.js');
+var Q           = require('q');
+var logic       = require('../logic.js');
+
 
 //Home
 router.route('/')
@@ -22,6 +25,9 @@ router.route('/appdata/set/item')
 router.route('/appdata/set/toggleitem')
     .post(toggleItem)
 
+
+router.route('/appdata/get/allweekly')
+    .get(printAllWeeklyData)
 
 function getHomeHandler(req, res){
     res.render('home', {});
@@ -50,17 +56,24 @@ function setAppData(req, res){
     res.send({ success: true, redirect: 0});
 }
 
+function printAllWeeklyData(req, res){
+    res.setHeader('Content-Type', 'application/json');
+    var suppliers = req.query.suppliers;
+    Q.fcall(logic.createSuppliersInventoryFolder, suppliers)
+	.then(function(path){
+	    return logic.makePhotosZip(path);
+	})
+	.then(function(zipPath){
+	    res.json({success: true, path: zipPath});
+	})
+	.catch(function(err){
+	    res.json({success: false, error: err});
+	});
+}
+  
 function getSupplierDataWeekly(req, res){
     res.setHeader('Content-Type', 'application/json');
     var supplier = req.query.supplier;
-    db.getWeeklySupplierData(supplier, (err, docs) =>{
-	if(err) res.json({success: false, error: errors.unableToLoadData});
-	else    res.json({success: true, data: docs});
-    });
-}
-
-function printSuppliersWeeklyData(req, res){
-    res.setHeader('Content-Type', 'application/json');
     db.getWeeklySupplierData(supplier, (err, docs) =>{
 	if(err) res.json({success: false, error: errors.unableToLoadData});
 	else    res.json({success: true, data: docs});

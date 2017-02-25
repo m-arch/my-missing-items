@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='csrf-token', content='ac6959062dbe64f91fe385c01b4f4369')
+    title Weekly Data for #{supplier}
+  body
+    .container
+      h3 #{supplier}
+      table(border="1")
+        tr
+          th Code
+          th Description
+          th Quantity
+          th Date
+        tr
+          each item in items
+            th= item.code
+            th= item.description
+            th= item.quantity
+            th= item.savedOn
+
+
