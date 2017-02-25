@@ -5,6 +5,21 @@ html
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='csrf-token', content='ac6959062dbe64f91fe385c01b4f4369')
     title Weekly Data for #{supplier}
+    style(type='text/css').
+      body{
+        background: white;
+          }
+      table {
+        border-collapse: collapse;
+        width: 800px;
+          }
+
+      th, td {
+        text-align: left;
+        padding: 8px;
+          }
+
+      tr:nth-child(even){background-color: #f2f2f2}
   body
     .container
       h3 #{supplier}

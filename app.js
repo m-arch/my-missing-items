@@ -64,11 +64,11 @@ app.use((err, request, response, next) => {
     console.log(err)
     response.status(500).send('Broken link!')
     next();
-})
+});
 
 
- setTimeout(function(){
-     Q.fcall(logic.createSuppliersInventoryFolder, ["MS"])
+setTimeout(function(){
+    Q.fcall(logic.createSuppliersInventoryFolder, ["MS"])
  	.then(function(path){
 	    return logic.makePhotosZip(path);
  	})
