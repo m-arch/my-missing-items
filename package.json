@@ -45,11 +45,13 @@
     "mongodb": "^2.2.22",
     "phantomjs": "^2.1.7",
     "pug": "^2.0.0-beta11",
+    "q": "^1.4.1",
     "react-dom": "^15.4.2",
     "react-dropdown": "^1.2.0",
     "url-to-image": "^1.0.0",
     "uuid": "^3.0.1",
-    "wkhtmltox": "^1.0.8"
+    "wkhtmltox": "^1.0.8",
+    "zip-folder": "^1.0.0"
   },
   "babel": {
     "presets": [

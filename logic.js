@@ -53,9 +53,9 @@ exports.createSuppliersInventoryFolder = function(suppliers){
 //this function takes a folder path of html files and create from it a zip file with same name containing images of html pages
 exports.makePhotosZip = function(path){
     var def = Q.defer();
+    console.log(path)
     Q.fcall(htmlToJpg, path)
 	.then(function(){
- 
 	    zipFolder(path + "/", path + ".zip", function(err) {
 		if(err) {
 		    console.log('oh no!', err);
@@ -71,13 +71,12 @@ var htmlToJpg = function(path){
     var def = Q.defer();
     fs.readdir(path, (err, files) =>{
 	files.map((file, i) =>{
-	    console.log(path);
-	    console.log(file);
 	    if(file.indexOf('.html') > 0){
 		var filename = file.split(".html")[0]
+		var purgePath = path.split("./public")[0]
 		var childArgs = [
 		    './rasterize.js',
-		    _vars.baseHtml + path + "/" + filename + ".html",
+		    _vars.baseHtml + purgePath + "/" + filename + ".html",
 		    path + "/" +  filename + '.jpg',
 		];
 		childProcess.execFile(binPath, childArgs, function(err, stdout, stderr){
