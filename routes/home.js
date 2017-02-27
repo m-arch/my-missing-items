@@ -17,7 +17,7 @@ router.route('/appdata/set')
     .post(setAppData)
 
 router.route('/supplierdata/get/weekly')
-    .get(getSupplierDataWeekly)
+    .get(printAllWeeklyData)
 
 router.route('/appdata/set/item')
     .post(setItemData)
@@ -58,13 +58,18 @@ function setAppData(req, res){
 
 function printAllWeeklyData(req, res){
     res.setHeader('Content-Type', 'application/json');
-    var suppliers = req.query.suppliers;
-    Q.fcall(logic.createSuppliersInventoryFolder, suppliers)
+    Q.fcall(db.getSuppliersList)
+	.then(function(suppliers){
+	    return logic.createSuppliersInventoryFolder(suppliers)
+	})
 	.then(function(path){
 	    return logic.makePhotosZip(path);
 	})
-	.then(function(zipPath){
-	    res.json({success: true, path: zipPath});
+	.then(function(zipPath){ 
+	    if(zipPath)
+		res.json({success: true, path: zipPath});
+	    else
+		res.json({success: false, error: "No Data"});
 	})
 	.catch(function(err){
 	    res.json({success: false, error: err});

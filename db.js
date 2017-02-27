@@ -1,3 +1,5 @@
+var Q = require('q');
+
 //MongoDB client 
 var MongoClient = require('mongodb').MongoClient
   , async = require('async')
@@ -72,6 +74,27 @@ exports.getSuppliers = function(done){
 	}
     });
 }
+
+
+exports.getSuppliersList = function(done){
+    var def = Q.defer();
+    var list = [];
+    state.db.collection("suppliers").find({}, {_id: -1, name: 1}).toArray(function(err, docs){
+	if(err){
+	    console.log(err);
+	    def.reject(err);
+	}else{
+	    docs.map(function(doc, i){
+		list.push(doc.name);
+		if(i == docs.length - 1){
+		    def.resolve(list);
+		}
+	    });
+	}
+    });
+    return def.promise;
+}
+
 					 
 
 exports.save = function(data, collection){
@@ -80,14 +103,23 @@ exports.save = function(data, collection){
 }
 
 
-exports.getWeeklySupplierData = function(supplier, done){
+exports.getWeeklySupplierData = function(supplier, done, reduceDateP){
     state.db.collection("inventory").find({supplier: supplier, foundP: {$ne: "true"} }).toArray(function(err, docs){
 	if(err){
 	    console.log(err)
 	    return done(err);
 	}else{
-	    return done(null, docs);
-	}
+	    if(reduceDateP){
+		docs.map(function(doc, i){
+		    doc.savedOn = doc.savedOn.substring(0,15);
+		    if(i + 1 == docs.length){
+			return done(null, docs);
+		    }
+		});
+	    }else{
+		return done(null, docs);
+	    }
+	}   
     });
 }
 

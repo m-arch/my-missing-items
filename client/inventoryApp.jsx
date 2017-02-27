@@ -68,11 +68,15 @@ var InventoryApp = React.createClass({
 	this.setState({page: page});
     },
 
+    _onZipClick: function(){
+	Store.getSupplierDataWeekly();
+    },
 
     render: function() {
 	return (
 	    <div>
 		<ErrorForm error={this.state.error}/>
+		<button className="button right" onClick={this._onZipClick}>Get Zip</button>
 		<a onClick={this._closeError} className="close">{this.state.error ? "x" : null}</a>
 		<div className="">
 		    <div className="space-row"/>

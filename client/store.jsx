@@ -189,7 +189,30 @@ var Store = assign({}, EventEmitter.prototype, {
 		console.error(status, err.toString());
 	    }
 	});	
-    },	
+    },
+
+    getSupplierDataWeekly(){
+	$.ajax({
+	    url: '/supplierdata/get/weekly',
+	    dataType: 'json',
+	    cache: false,
+	    success: function(response){
+		if(response.success == true)
+		    {
+			window.location.href = response.path;
+		    }
+		else
+		    {
+			handleResponse(response.error.code, response.error.message);		    
+		    }
+	    },
+	    error: function(xhr, status, err){
+		alert(err);
+		console.error(status, err.toString());
+	    }
+	});
+    },
+    
     
     addItem(data){
 	data._id = uuidV4();

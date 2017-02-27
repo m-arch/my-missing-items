@@ -28,7 +28,7 @@ exports.createSuppliersInventoryFolder = function(suppliers){
     suppliers.map(function(supplier, i){
 	db.getWeeklySupplierData(supplier, (err, items) =>{
 	    if(err) def.reject(err);
-	    if(items && items.length > 0){		
+	    if(items && items.length > 0){
 		exp.render('weekly', {supplier: supplier, items: items }, (err, html) =>{
 		    fs.writeFile(path + "/" + supplier + i + Date.now() + ".html" , html, (err) => {
 			if (err) {
@@ -44,7 +44,7 @@ exports.createSuppliersInventoryFolder = function(suppliers){
 		    });
 		});
 	    }
-	});
+	}, true);
     });
     return def.promise;
 }
@@ -53,17 +53,24 @@ exports.createSuppliersInventoryFolder = function(suppliers){
 //this function takes a folder path of html files and create from it a zip file with same name containing images of html pages
 exports.makePhotosZip = function(path){
     var def = Q.defer();
-    console.log(path)
     Q.fcall(htmlToJpg, path)
 	.then(function(){
-	    zipFolder(path + "/", path + ".zip", function(err) {
-		if(err) {
-		    console.log('oh no!', err);
-		} else {
-		    console.log('EXCELLENT');
-		}
-	    });
+	    setTimeout(function(){
+		zipFolder(path + "/", path + ".zip", function(err) {
+		    console.log("zipped");
+		    if(err) {
+			def.reject(err)
+		    } else {
+			console.log(_vars.baseHtml + (path + ".zip").split("./public")[1]);
+			def.resolve(_vars.baseHtml + (path + ".zip").split("./public")[1]);
+		    }
+		});
+	    }, 100);
 	})
+	.catch(function(err){
+	    def.reject(err);
+	});
+    return def.promise;
 }
 
 
@@ -73,20 +80,23 @@ var htmlToJpg = function(path){
 	files.map((file, i) =>{
 	    if(file.indexOf('.html') > 0){
 		var filename = file.split(".html")[0]
-		var purgePath = path.split("./public")[0]
+		var purgePath = path.split("./public")[1]
 		var childArgs = [
 		    './rasterize.js',
 		    _vars.baseHtml + purgePath + "/" + filename + ".html",
 		    path + "/" +  filename + '.jpg',
 		];
 		childProcess.execFile(binPath, childArgs, function(err, stdout, stderr){
-		    if(err || stderr)
-			def.reject(err + stderr);
-		    fse.remove(path + "/" + file, err => {
-			if (err) def.reject(err)
-			if(i == files.length -1){
-			    def.resolve(0);
-			}
+		    if(err || stderr){
+			if(err)
+			    def.reject(err)
+			def.reject(stderr);
+		    }
+		    fse.remove(path + "/" + file, (err) => {
+		    	if (err) console.log(err)
+		    if(i == files.length -1){
+			def.resolve(0);
+		    }
 		    })
 		});
 	    }
@@ -94,4 +104,4 @@ var htmlToJpg = function(path){
     });
     return def.promise;
 } 
-    
+

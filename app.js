@@ -67,15 +67,15 @@ app.use((err, request, response, next) => {
 });
 
 
-setTimeout(function(){
-    Q.fcall(logic.createSuppliersInventoryFolder, ["MS"])
- 	.then(function(path){
-	    return logic.makePhotosZip(path);
- 	})
- 	.then(function(){
- 	    console.log("done");
- 	})
- 	.catch(function(err){
- 	    console.log(err);
- 	});
-}, 1000);
+// setTimeout(function(){
+//     Q.fcall(logic.createSuppliersInventoryFolder, ["MS"])
+//  	.then(function(path){
+// 	    return logic.makePhotosZip(path);
+//  	})
+//  	.then(function(){
+//  	    console.log("done");
+//  	})
+//  	.catch(function(err){
+//  	    console.log(err);
+//  	});
+// }, 1000);
