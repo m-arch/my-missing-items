@@ -51,8 +51,8 @@ var NewItemForm = React.createClass({
 	var _this = this;
 	if(event.key == 'Enter'){
 	    this.setState({[event.target.name]: event.target.value});
-	    _this.state.supplier = event.target.value;
 	    if(nextName == "code"){
+	        _this.state.supplier = event.target.value;
 		Store.supplierExistsP(_this.state.supplier, function(yes){
 		    if(yes){
 			Store.addItem(_this.state);
