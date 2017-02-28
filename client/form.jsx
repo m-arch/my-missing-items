@@ -50,6 +50,8 @@ var NewItemForm = React.createClass({
     _onKeyPress: function(nextName, event){
 	var _this = this;
 	if(event.key == 'Enter'){
+	    this.setState({[event.target.name]: event.target.value});
+	    _this.state.supplier = event.target.value;
 	    if(nextName == "code"){
 		Store.supplierExistsP(_this.state.supplier, function(yes){
 		    if(yes){
@@ -65,28 +67,33 @@ var NewItemForm = React.createClass({
 	    _this.refs[nextName].focus();
 	}
     },
-    
+
+    _onClick: function(id){
+	console.log(document.getElementById(id).value);
+    },
+
+
     render: function() {
 	return(
 	    <div>
 		<div className="small-3 columns">
 		    <label className="input-label">Code
-			<input type="text" value={this.state.code} placeholder="Code" ref="code" name="code" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("description", event)} />
+			<input type="text" value={this.state.code} placeholder="Code" ref="code" name="code" onChange={this._onChange} id="n-inventory-code" onKeyPress={(event) => this._onKeyPress("description", event)} onClick={this._onClick.bind(this, "n-inventory-code")} />
 		    </label>
 		</div>
 		<div className="small-5 columns">
 		    <label className="input-label">Description
-			<input type="text" placeholder="Description here" value={this.state.description} name ="description" ref="description" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("quantity", event)}/>
+			<input type="text" placeholder="Description here" value={this.state.description} name ="description" ref="description" id="n-inventory-description" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("quantity", event)} onClick={this._onClick.bind(this, "n-inventory-description")}/>
 		    </label>
 		</div>
 		<div className="small-1 columns">
 		    <label className="input-label">Qty
-			<input type="text" placeholder="0" value={this.state.quantity} ref="quantity" name="quantity" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("supplier", event)} />
+			<input type="text" placeholder="0" value={this.state.quantity} ref="quantity" name="quantity" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("supplier", event)}/>
 		    </label>
 		</div>
 		<div className="small-3 columns">
 		    <label className="input-label">Supplier
-			<input type="text" placeholder="Supplier" value={this.state.supplier} ref="supplier" name="supplier" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("code", event)}/>
+			<input type="text" placeholder="Supplier" id="n-inventory-supplier" value={this.state.supplier} ref="supplier" name="supplier" onChange={this._onChange} onKeyPress={(event) => this._onKeyPress("code", event)} onClick={this._onClick.bind(this, "n-inventory-supplier")}/>
 		    </label>
 		</div>
 	    </div>
