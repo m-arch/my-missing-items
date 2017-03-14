@@ -7,14 +7,11 @@ const app = express();
 const port = 3000
 const bodyParser = require('body-parser');
 var Q = require('q');
-const logic = require('./logic');
-// ------------------------------------------------------- END of third party package requirements ------------------------------------------------
-
-//environment varialbes
+// ------------------------------------------------------- END of third party package requirements ---------------------------------------- //
 var mode = process.env.DEV_ENV
 
 //connection to database
-var DB = require('./db')
+var DB = require('./db');
 
 console.log("connecting....");
 DB.connect(mode, function(err, id){

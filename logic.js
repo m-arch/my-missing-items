@@ -55,17 +55,15 @@ exports.makePhotosZip = function(path){
     var def = Q.defer();
     Q.fcall(htmlToJpg, path)
 	.then(function(){
-	    setTimeout(function(){
-		zipFolder(path + "/", path + ".zip", function(err) {
-		    console.log("zipped");
-		    if(err) {
-			def.reject(err)
-		    } else {
-			console.log(_vars.baseHtml + (path + ".zip").split("./public")[1]);
-			def.resolve(_vars.baseHtml + (path + ".zip").split("./public")[1]);
-		    }
-		});
-	    }, 100);
+	    zipFolder(path + "/", path + ".zip", function(err) {
+		console.log("zipped");
+		if(err) {
+		    def.reject(err)
+		} else {
+		    console.log(_vars.baseHtml + (path + ".zip").split("./public")[1]);
+		    def.resolve(_vars.baseHtml + (path + ".zip").split("./public")[1]);
+		}
+	    });
 	})
 	.catch(function(err){
 	    def.reject(err);
@@ -95,7 +93,9 @@ var htmlToJpg = function(path){
 		    fse.remove(path + "/" + file, (err) => {
 		    	if (err) console.log(err)
 		    if(i == files.length -1){
-			def.resolve(0);
+			setTimeout(function(){
+			    def.resolve(0)
+			} ,1000);
 		    }
 		    })
 		});
